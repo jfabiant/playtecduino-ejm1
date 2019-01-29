@@ -1,0 +1,22 @@
+{
+  "name": "playtecduino-ejm1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jfabiant",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "jade": "^1.11.0",
+    "mysql": "^2.16.0",
+    "nodemon": "^1.18.9",
+    "socket.io": "^2.2.0"
+  }
+}

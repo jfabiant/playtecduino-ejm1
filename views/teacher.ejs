@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: Mirrored Blockly</title>
+  <script src="/blockly_compressed.js"></script>
+  <script src="/blocks_compressed.js"></script>
+  <script src="/msg/js/en.js"></script>
+  <script src="/jquery-3.3.1.min.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+<strong><p>Dar permiso a los estudiantes de: </p></strong>
+<button id="falseReadOnly"><strong>solo lectura: </strong>No</button>
+<button id="trueReadOnly"><strong>solo lectura: </strong>Si</button>
+
+  <table width="100%">
+    <tr>
+      <td>
+        <div id="primaryDiv" style="height: 480px; width: 1000px;"></div>
+      </td>
+    </tr>
+  </table>
+
+  <xml id="toolbox" style="display: none">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="math_number">
+      <field name="NUM">123</field>
+    </block>
+    <block type="math_arithmetic"></block>
+    <block type="text"></block>
+    <block type="text_print"></block>
+    <block type="variables_get"><field name="VAR">i</field></block>
+    <block type="variables_get"><field name="VAR">j</field></block>
+    <block type="variables_get"><field name="VAR">k</field></block>
+  </xml>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+
+    var socket = io()
+
+    // Inyecta el primer espacio de trabajo.
+    var primaryWorkspace = Blockly.inject('primaryDiv',
+        {media: '../../media/',
+         toolbox: document.getElementById('toolbox')});
+
+    // Escuchar eventos en el espacio de trabajo primario.
+    primaryWorkspace.addChangeListener(mirrorEvent);
+
+    function mirrorEvent(primaryEvent) {
+      if (primaryEvent.type == Blockly.Events.UI) {
+        return;  // No reflejar eventos de interfaz de usuario.
+      }
+      
+      // Convertir evento a JSON. Esto podría ser transmitido a través de la red.
+      var json = primaryEvent.toJson();
+      
+      socket.emit('new_message', {message: json})
+      
+    }
+    
+    //Permisos.
+    $("#falseReadOnly").click(function(){
+      socket.emit('permiso', {message: false});
+    });
+    $("#trueReadOnly").click(function(){
+      socket.emit('permiso', {message: true});
+    });
+    
+</script>
+
+</body>
+</html>
