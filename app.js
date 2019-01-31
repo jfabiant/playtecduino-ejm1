@@ -29,12 +29,7 @@ const server = app.listen(3000, function(){
     console.log('http://localhost:3000')
 })
 
-var myArray = new Array();
-
-app.get('/api-bloques/', function(req, res){
-    var jsonArray = JSON.parse(JSON.stringify(myArray))
-    res.json(jsonArray)
-})
+var myArray = [{}]
 
 /* sockets */
 const io = require('socket.io')(server);
@@ -45,15 +40,9 @@ io.on('connection', function(socket){
     socket.on('new_message', function(data){
         //console.log(data.message);
         //console.log("***************************************");
-        myArray.push(data.message);
-        socket.broadcast.emit('new_message', {message : data.message});
-    });
-
-    //Mandando mensaje (true or false)
-    socket.on('permiso', function(data){
-        //console.log(data.message)
-        socket.broadcast.emit('permiso', {message: data.message});
-
+        //myArray.push(data.message);
+        myArray = data.message
+        socket.broadcast.emit('new_message', {message : myArray});
     });
     
 });

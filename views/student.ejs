@@ -20,6 +20,8 @@
 </head>
 <body>
 
+  <button id="historyEvents"><strong>ver json obtenido: </strong>No</button>
+
   <table width="100%">
     <tr>
       <td>
@@ -46,57 +48,33 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
 
-  $(document).ready(function() {
+$(document).ready(function() {
     
     var socket = io();
-    var secondaryWorkspace;
     var json = [{}];
-    
+    var myArrayBlocks = [{}];
+    myArrayBlocks.push(json);
+
     // Inyecto el segundo espacio de trabajo.
-    secondaryWorkspace = Blockly.inject('secondaryDiv',
+    var secondaryWorkspace = Blockly.inject('secondaryDiv',
     {media: '../../media/',
     readOnly: true});
-
-    socket.on('permiso', function(data){
-
-      console.log(data.message)
-
-      if(data.message) {
-        
-        // Inyecto el segundo espacio de trabajo.
-        secondaryWorkspace = Blockly.inject('secondaryDiv',
-        {media: '../../media/',
-        readOnly: true});
-        
-      } else {
-        
-        /* Inyecto el segundo espacio de trabajo.
-        secondaryWorkspace = Blockly.inject('secondaryDiv',
-        {media: '../../media/',
-        toolbox: document.getElementById('toolbox')});
-
-         secondaryWorkspace.addChangeListener(mirrorEvent);
-         function mirrorEvent(primaryEvent) {
-          if (primaryEvent.type == Blockly.Events.UI) {
-            return;  // No reflejar eventos de interfaz de usuario.
-          }
-        } */
-        
-      }
-    });
-
+    
     socket.on('new_message', function(data){
         //console.log(data.message)
-        $.get("/api-bloques/", function(b){
-          json = b.toSource();
-        });
-        
-        console.log(json)
 
+        json = data.message
+        console.log(json)
         // Convierte a JSON de nuevo en un evento, luego ejecútelo.
         var secondaryEvent = Blockly.Events.fromJson(json, secondaryWorkspace);
         secondaryEvent.run(true);
     });
+    
+    $("#historyEvents").click(function(){
+      console.log(myArrayBlocks)
+    })
+
+
 });
 </script>
 

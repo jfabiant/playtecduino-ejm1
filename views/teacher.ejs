@@ -55,10 +55,10 @@
     var primaryWorkspace = Blockly.inject('primaryDiv',
         {media: '../../media/',
          toolbox: document.getElementById('toolbox')});
-
+    
     // Escuchar eventos en el espacio de trabajo primario.
     primaryWorkspace.addChangeListener(mirrorEvent);
-
+    
     function mirrorEvent(primaryEvent) {
       if (primaryEvent.type == Blockly.Events.UI) {
         return;  // No reflejar eventos de interfaz de usuario.
@@ -66,7 +66,7 @@
       
       // Convertir evento a JSON. Esto podría ser transmitido a través de la red.
       var json = primaryEvent.toJson();
-      
+
       socket.emit('new_message', {message: json})
       
     }
