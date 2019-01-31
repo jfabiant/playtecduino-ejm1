@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <button id="historyEvents"><strong>ver json obtenido: </strong>No</button>
+  <button id="historyEvents">ver conjunto de json obtenido</button>
 
   <table width="100%">
     <tr>
@@ -53,7 +53,6 @@ $(document).ready(function() {
     var socket = io();
     var json = [{}];
     var myArrayBlocks = [{}];
-    myArrayBlocks.push(json);
 
     // Inyecto el segundo espacio de trabajo.
     var secondaryWorkspace = Blockly.inject('secondaryDiv',
@@ -64,6 +63,7 @@ $(document).ready(function() {
         //console.log(data.message)
 
         json = data.message
+        myArrayBlocks.push(json);
         console.log(json)
         // Convierte a JSON de nuevo en un evento, luego ejecútelo.
         var secondaryEvent = Blockly.Events.fromJson(json, secondaryWorkspace);
@@ -71,8 +71,20 @@ $(document).ready(function() {
     });
     
     $("#historyEvents").click(function(){
-      console.log(myArrayBlocks)
-    })
+      //Al recibir el mensaje socket de permiso: readOnly: false
+      //Se creara un nuevo espacio de trabajo y se injectaran los bloques previamente guardados como json
+      //Estos se ejecutaran pasando de json a eventos y asi se formaran los bloques guardados.
+      for (var i=1; i<myArrayBlocks.length; i++) {
+        var obj = getDefaultObjectAt(myArrayBlocks, i);
+        console.log(obj)
+      }
+
+      function getDefaultObjectAt(myArrayBlocks, index)
+      {
+        return myArrayBlocks[index] = myArrayBlocks[index] || {};
+      }
+
+    });
 
 
 });
